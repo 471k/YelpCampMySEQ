@@ -1,0 +1,28 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore environment variables file
+.env
+
+# Ignore database files
+*.sqlite
+*.db
+*.sqlite3
+*.sql
+
+# Ignore compiled binary files
+*.class
+*.o
+*.pyc
+
+# Ignore package-lock.json file
+package-lock.json
+
+# Ignore .DS_Store files (Mac)
+.DS_Store
+
+# Ignore Thumbs.db files (Windows)
+Thumbs.db
