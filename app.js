@@ -103,7 +103,8 @@ app.use((req, res, next) => {
   }
   //res.locals is an object passed to the view engine (ejs) to be used in the template  (it is available in every template)
   //(req.user is the user that is currently logged in)
-  //(if no user is logged in, req.user is undefined and res.locals.currentUser is undefined as well (which is what we want)(if a user is logged in, req.user contains the user's username and id) (res.locals.currentUser is available in every template (it is available in every template because we are using app.use() middleware)
+  //(if no user is logged in, req.user is undefined and res.locals.currentUser is undefined as well (which is what we want)
+  //(if a user is logged in, req.user contains the user's username and id) (res.locals.currentUser is available in every template
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
