@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true }); // mergeParams: true is needed to access req.params.id in this file
 // const router = express.Router();
-const User = require("../models/user");
 const catchAsync = require("../utils/catchAsync");
 const passport = require("passport");
 const { storeReturnTo } = require("../middleware");

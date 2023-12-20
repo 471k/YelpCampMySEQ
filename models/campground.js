@@ -30,6 +30,8 @@ const Campground = sequelize.define("Campground", {
 // Campground.belongsTo(User, {
 //   onDelete: "CASCADE",
 // });
+// User.hasMany(Campground);
+// Campground.belongsTo(User, { foreignKey: "author_id", onDelete: "CASCADE" });
 
 Campground.sync();
 

@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const passport = require("passport");
 
 module.exports.renderRegister = (req, res) => {
   res.render("users/register");
@@ -30,7 +29,9 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
   req.flash("success", "Welcome back!");
-  const redirectUrl = res.locals.returnTo || "/campgrounds"; //if res.locals.returnTo exists, se redirectUrl to res.locals.returnTo, otherwise set redirectUrl to "/campgrounds"
+
+  //if res.locals.returnTo exists, set redirectUrl to res.locals.returnTo, otherwise set redirectUrl to "/campgrounds"
+  const redirectUrl = res.locals.returnTo || "/campgrounds";
   delete req.session.returnTo;
   res.redirect(redirectUrl);
 };

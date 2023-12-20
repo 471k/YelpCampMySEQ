@@ -1,7 +1,14 @@
+/**
+ * Checks if the environment variable NODE_ENV is not set to production mode.
+ * If it is not set to "production", it loads the configuration from .env file
+ * using "dotenv" package. This allows us to store sensitive information like
+ * database credetials as environment variables.
+ */
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+//importing required dependecies and modules
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -19,13 +26,26 @@ const userRoutes = require("./routes/users.js");
 const campgroundRoutes = require("./routes/campgrounds.js");
 const reviewRoutes = require("./routes/reviews.js");
 
+// Is used to set the template engine for rendering views to EJS.
+// It specifies that ejsMate package should be used for rendering EJS templates.
 app.engine("ejs", ejsMate);
+//is used to set the view engine to "ejs" and the views directory to the views folder
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+/**
+ * Sets up various middleware using app.use function.
+ * Middleware functions are executed in order they are declared, and they can
+ * modify the request and response object, as well as invoke the next middleware in the stack
+ */
 //It parses the form data and make it available in the 'req.body' object
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method")); //allows us to use query strings to override the method of a request (useful for PUT and DELETE requests) (must be placed before the routes and after app.use(express.urlencoded({ extended: true }) middleware) because it needs to be parsed first)
+//allows us to use query strings to override the method of a request (useful for PUT and DELETE requests)
+//(must be placed before the routes and after app.use(express.urlencoded({ extended: true }) middleware)
+//because it needs to be parsed first)
+app.use(methodOverride("_method"));
+// This middleware serves static files like CSS, JavaScript, and images from the specified directory,
+//in this case, the public directory.
 app.use(express.static(path.join(__dirname, "public")));
 
 const sessionConfig = {
