@@ -1,5 +1,11 @@
+/**
+ * This module defines and exports a router object that handles routes related
+ * to use authentication and registration.
+ */
 const express = require("express");
-const router = express.Router({ mergeParams: true }); // mergeParams: true is needed to access req.params.id in this file
+// Router() function creates a new router object for handling routes
+// mergeParams: true is needed to access req.params.id in this file
+const router = express.Router({ mergeParams: true });
 // const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 const passport = require("passport");

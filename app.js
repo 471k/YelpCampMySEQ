@@ -123,14 +123,31 @@ app.use((req, res, next) => {
   }
   //res.locals is an object passed to the view engine (ejs) to be used in the template  (it is available in every template)
   //(req.user is the user that is currently logged in)
-  //(if no user is logged in, req.user is undefined and res.locals.currentUser is undefined as well (which is what we want)
+  //(if no user is logged in, req.user is undefined and res.locals.currentUser is undefined as well
   //(if a user is logged in, req.user contains the user's username and id) (res.locals.currentUser is available in every template
   res.locals.currentUser = req.user;
+
+  /**
+   * req.flash("success") and req.flash("error") are used to retrieve any flash messages stored
+   * under the key "success" and "error" respectively in the req.flash() object.
+   * Flash messages are typically used to display temporary messages to the user, often for conveying
+   * success or error messages. The value returned by req.flash("success") and req.flash("error") is an array
+   * that contains all the flash messages stored under each of their coresponding keys.
+   * By assigning the array of flash messages to res.locals.success and res.locals.error, these messages are made
+   * available to the views or templates that will be rendered when they are needed
+   */
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  next(); //move on to the next middleware in the stack (if we don't call next(), the request will be left hanging and the page will never load)
+
+  //next() is called to move on to the next middleware in the stack.
+  //If we don't call next(), the request will be left hanging and the page will never load.
+  next();
 });
 
+/**
+ * Sets up different routes by mapping routes defined in 
+ * userRoutes, campgroundRoutes and reviewRoutes.
+ */
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
