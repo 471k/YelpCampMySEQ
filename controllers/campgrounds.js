@@ -67,7 +67,6 @@ module.exports.showCampground = async (req, res, next) => {
     },
     include: {
       model: User,
-      // attributes: ["username"],
     },
   });
 
@@ -78,15 +77,6 @@ module.exports.showCampground = async (req, res, next) => {
 
   const campground = campgroundRes[0];
 
-  // console.log("campground.User: ", campground.User);
-  // console.log("res.locals: ", res.locals);
-  // console.log("is equal: ", campground.User.equals(res.locals.currentUser));
-
-  // const reviewsRes = await Review.findAll({
-  //   where: {
-  //     CampgroundId: campground.id,
-  //   },
-  // });
   const reviewsRes = await Review.findAll({
     attributes: ["id", "rating", "body", "author_id"],
     where: {
@@ -94,18 +84,12 @@ module.exports.showCampground = async (req, res, next) => {
     },
     include: {
       model: User,
-      // attributes: ["username"],
     },
   });
-
-  // console.log("reviewsRes: ", reviewsRes);
 
   campground.reviews = reviewsRes.map(
     (review) => review.get({ plain: true }) //get the plain object from the review object (remove the sequelize methods) and map it to the reviews array in the campground object
   );
-
-  // console.log("campground: ", campground.reviews[1].User.username);
-  // console.log("campground.reviews: ", campground.reviews);
 
   res.render("campgrounds/show", { campground });
 };
@@ -137,10 +121,17 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
   const { id } = req.params;
-  await Campground.update({ ...req.body.campground }, { where: { id } });
+  //update body form on db based on the id of the campground.
+  await Campground.update(
+    {
+      ...req.body.campground,
+    },
+    { where: { id } }
+  );
 
   console.log("req.body:", req.body);
 
+  //Find the campground we want to update
   const campground = await Campground.findOne({
     attributes: [
       "id",
@@ -155,23 +146,29 @@ module.exports.updateCampground = async (req, res) => {
     where: { id },
   });
 
+  //map the imported files with in "imgs" ombject with key/value pair
   const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  // check wether there are any images on db, if not initialize it with an empty array
   const existingImages = campground.images || [];
 
+  //merge both
   const updatedImages = [...existingImages, ...imgs];
 
   //Update the 'images' column with the merged image array
   await Campground.update({ images: updatedImages }, { where: { id } });
 
+  //check if we there are any images to be deleted
   if (req.body.deleteImages) {
+    //if yes, delete them from cloudinary
     for (let filename of req.body.deleteImages) {
       await cloudinary.uploader.destroy(filename);
     }
-
+    //filter out images we want to be deleted
     req.body.campground.images = updatedImages.filter(
       (image) => !req.body.deleteImages.includes(image.filename)
     );
 
+    //update database
     await Campground.update({ images: req.body.campground.images }, { where: { id } });
   }
 

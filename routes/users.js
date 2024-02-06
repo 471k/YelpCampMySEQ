@@ -7,6 +7,7 @@ const express = require("express");
 // mergeParams: true is needed to access req.params.id in this file
 const router = express.Router({ mergeParams: true });
 // const router = express.Router();
+//A utility function that helps handle asynchronous errors in route handlers.
 const catchAsync = require("../utils/catchAsync");
 const passport = require("passport");
 const { storeReturnTo } = require("../middleware");

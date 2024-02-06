@@ -17,6 +17,5 @@ const Review = sequelize.define("Review", {
 Campground.hasMany(Review);
 Review.belongsTo(Campground, { onDelete: "CASCADE" });
 
-Review.sync();
 
 module.exports = Review;

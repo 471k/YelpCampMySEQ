@@ -9,10 +9,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 //importing required dependecies and modules
-const express = require("express");
+const express = require("express"); //Handles  HTTP requests, define routes and create server apps
 const app = express();
-const path = require("path");
-const methodOverride = require("method-override");
+const path = require("path"); //Used for concatenating paths
+const methodOverride = require("method-override"); // Allows to perform actions such as PUT and DELETE HTTP requests since HTML forms only supports GET and POST
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const ExpressError = require("./utils/ExpressError");
@@ -20,7 +20,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const User = require("./models/user");
 const helmet = require("helmet");
-// const { User, Campground, Review } = require("./models/associations");
+const sequelize = require("./config/connection.js");
 
 const userRoutes = require("./routes/users.js");
 const campgroundRoutes = require("./routes/campgrounds.js");
@@ -109,7 +109,9 @@ app.use(
   })
 );
 
+//initializes passport
 app.use(passport.initialize());
+//stores user information in session
 app.use(passport.session());
 
 passport.use(User.createStrategy());
@@ -121,6 +123,7 @@ app.use((req, res, next) => {
   if (!["/login", "/"].includes(req.originalUrl)) {
     req.session.returnTo = req.originalUrl;
   }
+
   //res.locals is an object passed to the view engine (ejs) to be used in the template  (it is available in every template)
   //(req.user is the user that is currently logged in)
   //(if no user is logged in, req.user is undefined and res.locals.currentUser is undefined as well
@@ -145,29 +148,29 @@ app.use((req, res, next) => {
 });
 
 /**
- * Sets up different routes by mapping routes defined in 
+ * Sets up different routes by mapping routes defined in
  * userRoutes, campgroundRoutes and reviewRoutes.
  */
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
 
-app.get("/fakeUser", async (req, res) => {
-  const user = new User({
-    email: "user2@gmail.com",
-    username: "user5",
-    password: "pass5",
-  });
-  console.log("user: ", user);
+// app.get("/fakeUser", async (req, res) => {
+//   const user = new User({
+//     email: "user2@gmail.com",
+//     username: "user5",
+//     password: "pass5",
+//   });
+//   console.log("user: ", user);
 
-  const newUser = await User.register(user, user.password, function (err, user) {
-    if (err) {
-      console.log("error while user register!", err);
-    }
-  });
-  // res.send(newUser);
-  console.log(newUser);
-});
+//   const newUser = await User.register(user, user.password, function (err, user) {
+//     if (err) {
+//       console.log("error while user register!", err);
+//     }
+//   });
+//   // res.send(newUser);
+//   console.log(newUser);
+// });
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -183,6 +186,14 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000, () => {
-  console.log("Serving on port 3000");
-});
+sequelize
+  .sync({ alter: true })
+  .then((kot) => {
+    console.log("All models were synchronized successfully.");
+    app.listen(3000, () => {
+      console.log("Serving on port 3000");
+    });
+  })
+  .catch((err) => {
+    console.log("ERROR");
+  });

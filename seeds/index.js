@@ -6,11 +6,7 @@ const { places, descriptors } = require("./seedHelpers");
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
-  //This creates the table, dropping it first if it already existed
-  // await Campground.sync({ force: true });
-  await Campground.sync();
-
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 10; i++) {
     console.log(i, " iteration Creating campground");
 
     const random1000 = Math.floor(Math.random() * 1000);

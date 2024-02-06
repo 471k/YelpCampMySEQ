@@ -16,6 +16,4 @@ Review.belongsTo(User, { foreignKey: "author_id", onDelete: "CASCADE" });
 User.hasMany(Campground);
 Campground.belongsTo(User, { foreignKey: "author_id", onDelete: "CASCADE" });
 
-User.sync();
-
 module.exports = User;

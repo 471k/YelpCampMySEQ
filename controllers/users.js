@@ -6,7 +6,10 @@ module.exports.renderRegister = (req, res) => {
 
 module.exports.register = async (req, res, next) => {
   const { email, username, password } = req.body;
+  //creating a new user instance
   const user = new User({ email, username, password });
+
+  //handle the registration process
   await User.register(user, password, function (err, user) {
     if (err) {
       req.flash("error", err.message);
@@ -30,7 +33,8 @@ module.exports.renderLogin = (req, res) => {
 module.exports.login = (req, res) => {
   req.flash("success", "Welcome back!");
 
-  //if res.locals.returnTo exists, set redirectUrl to res.locals.returnTo, otherwise set redirectUrl to "/campgrounds"
+  //if res.locals.returnTo exists, set redirectUrl to res.locals.returnTo, 
+  //otherwise set redirectUrl to "/campgrounds"
   const redirectUrl = res.locals.returnTo || "/campgrounds";
   delete req.session.returnTo;
   res.redirect(redirectUrl);

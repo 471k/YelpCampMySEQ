@@ -18,7 +18,13 @@ const Campground = sequelize.define("Campground", {
   description: {
     type: DataTypes.STRING,
   },
+  description2: {
+    type: DataTypes.INTEGER,
+  },
   location: {
+    type: DataTypes.STRING,
+  },
+  country: {
     type: DataTypes.STRING,
   },
   author_id: {
@@ -32,7 +38,5 @@ const Campground = sequelize.define("Campground", {
 // });
 // User.hasMany(Campground);
 // Campground.belongsTo(User, { foreignKey: "author_id", onDelete: "CASCADE" });
-
-Campground.sync();
 
 module.exports = Campground;

@@ -29,13 +29,13 @@ module.exports.validateCampground = (req, res, next) => {
 };
 
 module.exports.isAuthor = async (req, res, next) => {
-  console.log("isAuthor function");
   const { id } = req.params;
   const campground = await Campground.findOne({
     attributes: ["id", "title", "images", "price", "description", "location", "author_id"],
     where: { id },
     include: { model: User },
   });
+
   if (!campground.User.equals(req.user)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/campgrounds/${id}`);
